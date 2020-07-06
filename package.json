@@ -12,13 +12,17 @@
     "seed:data": "ts-node src/scripts/seeds/index.ts"
   },
   "dependencies": {
+    "@types/express-validator": "^3.0.0",
+    "@types/winston": "^2.4.4",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.21",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

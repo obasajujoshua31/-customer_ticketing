@@ -1,6 +1,5 @@
 [
   {
-    "_id": "5f02204a94fbe62bf2c1426a",
     "name": "admin",
     "email": "admin@admin.com",
     "password": "$2a$10$hyF8l7SRdBxejCM6F.ZvNe5TdElRXV4F4qp/XbfxHbaCTHBuDUNES",
@@ -8,7 +7,6 @@
     "dateCreated": "2020-07-05T18:35:32.139Z"
   },
   {
-    "_id": "5f02206c94fbe62bf2c1426b",
     "name": "agent",
     "email": "agent@agent.com",
     "password": "$2a$10$0.KutRl9JVfGcjR.rZ1Zx.3AgZen1Yw9kyH7NrNqU8/FFkbjsgTGm",
@@ -16,7 +14,6 @@
     "dateCreated": "2020-07-05T18:35:32.139Z"
   },
   {
-    "_id": "5f02207a94fbe62bf2c1426c",
     "name": "customer",
     "email": "customer@customer.com",
     "password": "$2a$10$SkwdRSMh2T0H3zMnIlv12OwmpPmoJ4C41u1dnFaSfWpKELoao9tcG",

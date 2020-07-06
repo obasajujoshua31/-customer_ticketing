@@ -1,19 +1,19 @@
 import connectToDatabase from '../database/connection/connection';
 import IConfig from '../config/iConfig';
 import initMiddlewares from './middlewares';
+import appRouter from '../api/routes';
 
 const startServer = (appConfig: IConfig) => {
   const app = require('express')();
 
   initMiddlewares(app);
-  connectToDatabase(appConfig.dbURI);
 
-  app.get('/api/v1', (req, res) => {
-    return res.send('Welcome');
-  });
+  connectToDatabase(appConfig);
+
+  app.use('/api/v1', appRouter);
 
   app.listen(appConfig.appPort, () => {
-    console.log('Server started at port 6000');
+    console.log('Server listening at ...', appConfig.appPort);
   });
 };
 

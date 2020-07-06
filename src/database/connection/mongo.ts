@@ -1,19 +1,30 @@
-import * as mongoClient from 'mongodb';
+import { connect as connectToMongo, Db, MongoClient } from 'mongodb';
 import IConfig from '../../config/iConfig';
 
-const connectToMongoClient = (config: IConfig, cb: any) => {
-  mongoClient.connect(
-    config.dbURI,
-    { useUnifiedTopology: true },
-    (err, client) => {
-      if (err) {
-        cb(err, null, null);
-      }
-      const db = client.db(config.dbName);
+interface IMongoConnection {
+  db: Db;
+  client: MongoClient;
+}
 
-      cb(null, client, db);
-    },
-  );
+const connectToMongoClient = (config: IConfig): Promise<IMongoConnection> => {
+  return new Promise((resolve, reject) => {
+    connectToMongo(
+      config.dbURI,
+      { useUnifiedTopology: true },
+      (err, client) => {
+        if (err) {
+          reject(err);
+        }
+        const db = client.db(config.dbName);
+
+        const connection: IMongoConnection = {
+          db,
+          client,
+        };
+        resolve(connection);
+      },
+    );
+  });
 };
 
 export default connectToMongoClient;

@@ -2,25 +2,32 @@ import { Db, MongoClient } from 'mongodb';
 import connectToMongoClient from '../../database/connection/mongo';
 import config from '../../config/config';
 
-const createDocuments = (collection: string, seeds: any[]) => {
-  connectToMongoClient(
-    config,
-    async (err: Error, client: MongoClient, db: Db) => {
-      if (err) throw err;
-      const dbCollection = db.collection(collection);
+const createDocuments = async (
+  collection: string,
+  seeds: any[],
+  index = null,
+) => {
+  let dbClient: MongoClient;
+  try {
+    const { db, client } = await connectToMongoClient(config);
 
-      const counts = await dbCollection.countDocuments({});
+    dbClient = client;
+    const dbCollection = db.collection(collection);
 
-      if (counts === 0) {
-        dbCollection.insertMany(seeds, (error, result) => {
-          if (error) throw error;
+    const counts = await dbCollection.countDocuments({});
 
-          console.log(`${collection} created successfully`);
-        });
+    if (counts === 0) {
+      await dbCollection.insertMany(seeds);
+      if (index) {
+        await dbCollection.createIndex(index);
       }
-      client.close();
-    },
-  );
+    }
+    console.log(`${collection} collection created!`);
+  } catch (error) {
+    console.error('Seed data failed with ', error.message);
+  } finally {
+    dbClient.close();
+  }
 };
 
 export default createDocuments;

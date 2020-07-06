@@ -1,10 +1,19 @@
-import * as mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import { hashPassword, isMatchPassword } from '../../api/utils/password';
+
+export interface IUser extends Document {
+  _id: string;
+  name: string;
+  password: string;
+  email: string;
+  dateCreated: Date;
+  accountType: string;
+  isMatchPassword(password: string): boolean
+}
 
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-
   name: {
     type: String,
   },
@@ -20,7 +29,19 @@ const userSchema = new Schema({
   },
   accountType: {
     type: String,
+    default: 'customer',
   },
 });
+
+userSchema.pre<IUser>('save', function (next) {
+  const user = this;
+  if (!user.isModified('password')) return next();
+  user.password = hashPassword(user.password);
+  next();
+});
+
+userSchema.methods.isMatchPassword = function (password: string) {
+  return isMatchPassword(password, this.password);
+};
 
 export default mongoose.model('User', userSchema);
