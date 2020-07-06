@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "5f02309a5bff30b7ba287aaf",
+    "status": "PENDING",
+    "description": "service my car",
+    "dateRequested": "2020-07-05T18:35:32.139Z",
+    "dateClosed": null,
+    "customerId": "5f02207a94fbe62bf2c1426c",
+    "agentId": null
+  },
+  {
+    "_id": "5f02311e5bff30b7ba287ab0",
+    "status": "CLOSED",
+    "description": "paint my shop",
+    "dateRequested": "2020-07-05T18:35:32.139Z",
+    "dateClosed": "2020-07-05T20:00:11.752Z",
+    "customerId": "5f02207a94fbe62bf2c1426c",
+    "agentId": "5f02206c94fbe62bf2c1426b"
+  },
+  {
+    "_id": "5f0231885bff30b7ba287ab1",
+    "status": "ACTIVE",
+    "description": "review my documents",
+    "dateRequested": "2020-07-05T18:35:32.139Z",
+    "dateClosed": null,
+    "customerId": "5f02207a94fbe62bf2c1426c",
+    "agentId": "5f02206c94fbe62bf2c1426b"
+  }
+]
