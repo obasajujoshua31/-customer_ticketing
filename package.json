@@ -12,7 +12,10 @@
     "seed:data": "ts-node src/scripts/seeds/index.ts"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.2.1",
     "@types/express-validator": "^3.0.0",
+    "@types/kue": "^0.11.13",
+    "@types/mailgen": "^2.0.3",
     "@types/winston": "^2.4.4",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
@@ -20,6 +23,8 @@
     "express": "^4.17.1",
     "express-validator": "^6.6.0",
     "jsonwebtoken": "^8.5.1",
+    "kue": "^0.11.6",
+    "mailgen": "^2.0.13",
     "mongoose": "^5.9.21",
     "morgan": "^1.10.0",
     "winston": "^3.3.3"

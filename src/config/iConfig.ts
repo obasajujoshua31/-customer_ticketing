@@ -4,4 +4,6 @@ export default interface IConfig {
   dbName: string;
   env: string;
   jwtSecretKey: string;
+  sendGridKey: string;
+  fromEmail: string;
 }

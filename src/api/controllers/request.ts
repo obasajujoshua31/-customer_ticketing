@@ -1,5 +1,14 @@
+import { findUserById, createComment } from './../utils/query';
+import {
+  userType,
+  statusEnum,
+  REQUEST_ACTIVE,
+  REQUEST_CLOSED,
+  REQUEST_CANCELLED,
+} from './../utils/constants';
 import { requestPaginationQuery } from './../utils/pagination';
 import { tryAsync } from '../utils/global';
+import queue from '../../services/queue';
 import {
   createdResponse,
   badRequest,
@@ -18,7 +27,7 @@ export const CreateRequest = () =>
 
     const request = new Request({
       description,
-      customerId: req.user._id,
+      customer: req.user._id,
     });
 
     const savedRequest = await request.save();
@@ -33,15 +42,13 @@ export const CreateRequest = () =>
 
 export const GetLoggedInUserRequests = () =>
   tryAsync(async (req, res) => {
-    const { _id: customerId } = req.user;
+    const { _id: customer } = req.user;
     const { limit, offset } = requestPaginationQuery(req);
 
-    const requestPromise = Request.find({ customerId })
-      .limit(limit)
-      .skip(offset);
+    const requestPromise = Request.find({ customer }).limit(limit).skip(offset);
 
     const countPromise = Request.countDocuments({
-      customerId,
+      customer,
     });
 
     const [requests, requestCount] = await Promise.all([
@@ -86,28 +93,12 @@ export const GetAllRequests = () =>
 
 export const GetRequestById = () =>
   tryAsync(async (req, res) => {
-    const { requestId } = req.params;
-    if (!isValidId(requestId)) {
-      logger.log({
-        level: 'error',
-        message: 'invalid request id',
-      });
-      return badRequest(res, { error: 'invalid request id' });
-    }
+    const { request, user } = req;
 
-    const request = (await Request.findById(requestId)) as IRequest;
-
-    logger.log({
-      level: 'info',
-      message: 'request retrieved',
-      data: request,
-    });
-
-    if (!request) {
-      return notFound(res, 'request is not found');
-    }
-
-    if (request.customerId.toString() !== req.user._id.toString()) {
+    if (
+      user.accountType === userType.customer.toString() &&
+      request.customer._id.toString() !== user._id.toString()
+    ) {
       logger.log({
         level: 'error',
         message: 'userid is not equal to request.customerid',
@@ -116,4 +107,137 @@ export const GetRequestById = () =>
     }
 
     return successResponse(res, request);
+  });
+
+export const assignRequestToAgentByAdmin = () =>
+  tryAsync(async (req, res) => {
+    const {
+      request,
+      body: { agentId },
+    } = req;
+
+    if (typeof agentId === 'undefined' || !isValidId(agentId)) {
+      logger.log({
+        level: 'warn',
+        message: 'agent id is not valid',
+      });
+      return badRequest(res, 'cannot process non pending requests');
+    }
+
+    const agent = await findUserById(agentId);
+    if (!agent) {
+      logger.log({
+        level: 'warn',
+        message: 'agent cannot be found for the id provided',
+      });
+      return badRequest(res, 'cannot find agent');
+    }
+
+    if (request.status !== statusEnum.PENDING) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot process non pending requests',
+      });
+      return badRequest(res, 'cannot process non pending requests');
+    }
+
+    await request.updateStatus(statusEnum.ACTIVE);
+
+    const updatedRequest = await request.assignAgent(agentId);
+
+    queue.create(REQUEST_ACTIVE, { user: request.customer, agent }).save();
+    return successResponse(res, updatedRequest);
+  });
+
+export const assignRequestToAgent = () =>
+  tryAsync(async (req, res) => {
+    const {
+      user: { _id: agentId },
+      user: agent,
+      request,
+    } = req;
+
+    if (request.status !== statusEnum.PENDING) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot process non pending requests',
+      });
+      return badRequest(res, 'cannot process non pending requests');
+    }
+
+    await request.updateStatus(statusEnum.ACTIVE);
+
+    const updatedRequest = await request.assignAgent(agentId);
+
+    queue.create(REQUEST_ACTIVE, { user: request.customer, agent }).save();
+
+    return successResponse(res, updatedRequest);
+  });
+
+export const closeRequest = () =>
+  tryAsync(async (req, res) => {
+    const {
+      user,
+      request,
+      body: { comment = null },
+    } = req;
+
+    if (request.status !== statusEnum.ACTIVE) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot process non active requests',
+      });
+      return badRequest(res, 'cannot process non active requests');
+    }
+
+    if (
+      user.accountType === userType.agent &&
+      request.agent._id.toString() !== user._id.toString()
+    ) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot close request',
+      });
+      return notAuthorized(res);
+    }
+
+    if (comment) {
+      createComment({ content: comment, request, commentBy: user });
+    }
+
+    const updatedRequest = await request.updateStatus(statusEnum.CLOSED);
+
+    queue.create(REQUEST_CLOSED, { user: request.customer }).save();
+
+    return successResponse(res, updatedRequest);
+  });
+
+export const cancelRequest = () =>
+  tryAsync(async (req, res) => {
+    const { user, request } = req;
+
+    if (request.status !== statusEnum.PENDING) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot cancel non pending request',
+      });
+      return badRequest(res, 'cannot cancel non pending requests');
+    }
+
+    if (
+      user.accountType === userType.customer &&
+      request.customer._id.toString() !== user._id.toString()
+    ) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot cancel request',
+      });
+      return notAuthorized(res);
+    }
+
+    const updatedRequest = await request.updateStatus(statusEnum.CANCELLED);
+
+    queue.create(REQUEST_CANCELLED, { user: request.customer }).save();
+
+    return successResponse(res, updatedRequest);
   });

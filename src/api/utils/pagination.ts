@@ -1,10 +1,20 @@
 import { Request } from 'express';
-
+/**
+ * @description This is the structure for each pagination result
+ *
+ * @interface IPage
+ */
 interface IPage {
   page?: number;
   limit?: number;
 }
 
+/**
+ * @description This takes request object and returns limit and offset for that request
+ * it uses 1 for page and 5 for limit if not query params are passed
+ *
+ * @param {Request} req
+ */
 export const requestPaginationQuery = (req: Request) => {
   let { limit = 5, page = 1 } = req.query;
 
@@ -20,6 +30,13 @@ export const requestPaginationQuery = (req: Request) => {
   return { offset, limit: Number(limit) };
 };
 
+/**
+ * @description This accepts the request object and the total count of the documents
+ * it returns the previous page, next page and the total count that was initially passed.
+ *
+ * @param {Request} req
+ * @param {number} totalCount
+ */
 export const paginationOption = (req: Request, totalCount: number) => {
   const next: IPage = {};
   const previous: IPage = {};

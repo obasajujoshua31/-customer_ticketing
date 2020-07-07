@@ -9,6 +9,8 @@ const {
   DATABASE_NAME,
   NODE_ENV,
   JWT_SECRET_KEY,
+  SENDGRID_KEY,
+  FROM_EMAIL,
 } = process.env;
 
 const appConfig: IConfig = {
@@ -17,6 +19,8 @@ const appConfig: IConfig = {
   dbName: DATABASE_NAME,
   env: NODE_ENV,
   jwtSecretKey: JWT_SECRET_KEY,
+  sendGridKey: SENDGRID_KEY,
+  fromEmail: FROM_EMAIL,
 };
 
 export default appConfig;

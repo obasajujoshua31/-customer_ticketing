@@ -1,11 +1,18 @@
 import mongoose from 'mongoose';
 import IConfig from '../../config/iConfig';
 
-const connectToDatabase = (appConfig: IConfig) => {
+/**
+ * @description This connects the application to database
+ *
+ * @param {IConfig} appConfig
+ * @returns {void}
+ */
+const connectToDatabase = (appConfig: IConfig): void => {
   mongoose.connect(appConfig.dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     dbName: appConfig.dbName,
+    useCreateIndex: true,
   });
 
   // Get the default connection

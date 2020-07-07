@@ -8,7 +8,10 @@ export interface IUser extends Document {
   email: string;
   dateCreated: Date;
   accountType: string;
-  isMatchPassword(password: string): boolean
+  isDeactivated: boolean;
+  isMatchPassword(password: string): boolean;
+  deactivate(): Promise<this>;
+  reactivate(): Promise<this>;
 }
 
 const Schema = mongoose.Schema;
@@ -31,6 +34,13 @@ const userSchema = new Schema({
     type: String,
     default: 'customer',
   },
+  isDeactivated: {
+    type: Boolean,
+    default: false,
+  },
+  dateDeactivated: {
+    type: Date,
+  },
 });
 
 userSchema.pre<IUser>('save', function (next) {
@@ -42,6 +52,19 @@ userSchema.pre<IUser>('save', function (next) {
 
 userSchema.methods.isMatchPassword = function (password: string) {
   return isMatchPassword(password, this.password);
+};
+
+userSchema.methods.deactivate = async function () {
+  this.isDeactivated = true;
+  this.dateDeactivated = new Date();
+  await this.save();
+  return this;
+};
+
+userSchema.methods.reactivate = async function () {
+  this.isDeactivated = false;
+  await this.save();
+  return this;
 };
 
 export default mongoose.model('User', userSchema);
