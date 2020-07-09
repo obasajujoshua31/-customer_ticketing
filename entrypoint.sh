@@ -1,4 +1,3 @@
-
 if [ $NODE_ENV = "test" ] 
 then yarn test
 else 

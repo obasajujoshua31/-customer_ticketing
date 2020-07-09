@@ -6,13 +6,12 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - setup_remote_docker
       - restore_cache:
           keys:
              - v1-pkg-cache
 
-      - run: docker build -t ${CIRCLE_SHA_SHORT} .
-      - run: docker run ${CIRCLE_SHA_SHORT}
+      - run: yarn install
+      - run: yarn test
 workflows:
   build-and-test:
     jobs:

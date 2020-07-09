@@ -10,7 +10,7 @@
     "build": "tsc -p tsconfig.json",
     "watch": "nodemon -e ts -w ./src -x yarn start",
     "seed:data": "ts-node src/scripts/seeds/index.ts",
-    "test": "jest  --coverage --watch"
+    "test": "jest  --coverage"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.2.1",
