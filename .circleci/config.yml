@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: circle/node:latest
+      - image: circleci/node:latest
     steps:
       - checkout
       - setup_remote_docker
