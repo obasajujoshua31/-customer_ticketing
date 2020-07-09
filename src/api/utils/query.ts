@@ -34,11 +34,21 @@ export const findUserById = async (id: string): Promise<Document> => {
   return await User.findOne({ _id: id }).exec();
 };
 
+/**
+ * @description This is responsible for creating comment for a particular request
+ *
+ * @param {IComment} {
+ *   content,
+ *   request,
+ *   commentBy,
+ * }
+ * @returns {Promise<Document>}
+ */
 export const createComment = async ({
   content,
   request,
   commentBy,
-}: IComment) => {
+}: IComment): Promise<Document> => {
   const comment = new Comment({
     content,
     request: request._id,
@@ -46,4 +56,22 @@ export const createComment = async ({
   });
 
   return await comment.save();
+};
+
+/**
+ * @description This is responsible for finding comment by a request
+ *
+ * @param {string} requestId
+ * @param {*} { limit = 5, offset = 0 }
+ * @returns {Promise<Document[]>}
+ */
+export const findCommentByRequest = async (
+  requestId: string,
+  { limit = 5, offset = 0 }: any,
+): Promise<Document[]> => {
+  const allComment = await Comment.find({ request: requestId })
+    .limit(limit)
+    .skip(offset);
+
+  return allComment;
 };

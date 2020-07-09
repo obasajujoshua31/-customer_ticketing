@@ -1,3 +1,4 @@
+import { convertToCSV } from './../utils/jsonToCsv';
 import { findUserById, createComment } from './../utils/query';
 import {
   userType,
@@ -20,6 +21,7 @@ import { logger } from '../utils/logger';
 import Request, { IRequest } from '../../database/models/request';
 import { isValidId } from '../utils/validator';
 import { paginationOption } from '../utils/pagination';
+import { IUser } from 'database/models/user';
 
 export const CreateRequest = () =>
   tryAsync(async (req, res) => {
@@ -121,16 +123,32 @@ export const assignRequestToAgentByAdmin = () =>
         level: 'warn',
         message: 'agent id is not valid',
       });
-      return badRequest(res, 'cannot process non pending requests');
+      return badRequest(res, 'agent id is not valid');
     }
 
-    const agent = await findUserById(agentId);
+    const agent = (await findUserById(agentId)) as IUser;
     if (!agent) {
       logger.log({
         level: 'warn',
         message: 'agent cannot be found for the id provided',
       });
       return badRequest(res, 'cannot find agent');
+    }
+
+    if (agent.isDeactivated) {
+      logger.log({
+        level: 'warn',
+        message: 'agent account is deactivated',
+      });
+      return badRequest(res, 'agent account is deactivated');
+    }
+
+    if (request.customer.isDeactivated) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot process a deactivated customer request',
+      });
+      return badRequest(res, 'cannot process a deactivated customer request');
     }
 
     if (request.status !== statusEnum.PENDING) {
@@ -163,6 +181,14 @@ export const assignRequestToAgent = () =>
         message: 'cannot process non pending requests',
       });
       return badRequest(res, 'cannot process non pending requests');
+    }
+
+    if (request.customer.isDeactivated) {
+      logger.log({
+        level: 'warn',
+        message: 'cannot process a deactivated customer request',
+      });
+      return badRequest(res, 'cannot process a deactivated customer request');
     }
 
     await request.updateStatus(statusEnum.ACTIVE);
@@ -240,4 +266,34 @@ export const cancelRequest = () =>
     queue.create(REQUEST_CANCELLED, { user: request.customer }).save();
 
     return successResponse(res, updatedRequest);
+  });
+
+export const getRequestClosedInLastMonth = () =>
+  tryAsync(async (req, res) => {
+    const { user: agent } = req;
+
+    const now = new Date(); // present date
+
+    const noOfDaysRequired = 30;
+
+    const allRequestsClosed = await Request.find({
+      agent: agent.id,
+      status: statusEnum.CLOSED,
+      dateClosed: {
+        $gte: new Date(now.setDate(now.getDate() - noOfDaysRequired)),
+      },
+    })
+      .populate('customer', '-password')
+      .exec();
+
+    if (!allRequestsClosed.length) {
+      return notFound(res, 'no requests closed for agent');
+    }
+
+    const csv = await convertToCSV(allRequestsClosed);
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment(`${new Date().getTime()}.csv`);
+
+    return res.send(csv);
   });

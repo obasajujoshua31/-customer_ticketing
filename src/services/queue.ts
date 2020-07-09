@@ -4,10 +4,14 @@ import {
   REQUEST_ACTIVE,
   REQUEST_CLOSED,
   REQUEST_CANCELLED,
+  AGENT_COMMENT,
 } from './../api/utils/constants';
 import * as kue from 'kue';
 import sendEmail from '../email/email';
-import { statusChangeTemplate } from '../email/template';
+import {
+  statusChangeTemplate,
+  newAgentCommentTemplate,
+} from '../email/template';
 
 const queue = kue.createQueue();
 
@@ -44,5 +48,20 @@ queue.process(REQUEST_CANCELLED, ({ data: { user } }, done: any) => {
   sendEmail(user.email, `Your request is now ${statusEnum.CANCELLED}`, html);
   done();
 });
+
+queue.process(
+  AGENT_COMMENT,
+  ({ data: { comment, request, agentOrCustomer } }, done: any) => {
+    const html = newAgentCommentTemplate(
+      comment,
+      request,
+      agentOrCustomer,
+      'google.com',
+    );
+
+    sendEmail(request.customer.email, 'You have a new comment', html);
+    done();
+  },
+);
 
 export default queue;

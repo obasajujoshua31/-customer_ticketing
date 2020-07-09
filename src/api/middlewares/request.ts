@@ -1,4 +1,5 @@
-import { badRequest, notFound } from './../utils/http';
+import { userType } from './../utils/constants';
+import { badRequest, notFound, notAuthorized } from './../utils/http';
 import { logger } from '../utils/logger';
 import { isValidId } from './../utils/validator';
 import RequestModel, { IRequest } from '../../database/models/request';
@@ -47,5 +48,39 @@ export const getRequest = async (
   if (request.agent) request.agent.password = undefined;
 
   req.request = request;
+  return next();
+};
+
+export const isCustomerRequests = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { user, request } = req;
+
+  if (
+    user.accountType === userType.customer.toString() &&
+    request.customer._id.toString() !== user._id.toString()
+  ) {
+    return notAuthorized(res);
+  }
+
+  return next();
+};
+
+export const isAgentRequests = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { user, request } = req;
+
+  if (
+    user.accountType === userType.agent.toString() &&
+    request.agent._id.toString() !== user._id.toString()
+  ) {
+    return notAuthorized(res);
+  }
+
   return next();
 };

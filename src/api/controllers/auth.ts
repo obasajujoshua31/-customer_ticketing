@@ -36,6 +36,11 @@ export const LoginUser = () =>
       return badRequest(res, { message: 'Invalid login credentials' });
     }
 
+    if (user.isDeactivated) {
+      logger.log({ level: 'error', message: 'Account is deactivated' });
+      return badRequest(res, { message: 'user account is deactivated' });
+    }
+
     if (!user.isMatchPassword(password)) {
       logger.log({ level: 'error', message: 'Password does not match' });
       return badRequest(res, { message: 'Invalid login credentials' });

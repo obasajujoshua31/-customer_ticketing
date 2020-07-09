@@ -30,6 +30,10 @@ export const verifyUser = async (
       return notAuthenticated(res, 'not authenticated');
     }
 
+    if (user.isDeactivated) {
+      return notAuthenticated(res, 'user account is deactivated');
+    }
+
     req.user = user;
     return next();
   } catch (error) {
@@ -88,6 +92,21 @@ export const isCustomerOrAdmin = (
   const user = req.user;
 
   if (user.accountType === userType.agent.toString()) {
+    return notAuthorized(res);
+  }
+
+  return next();
+};
+
+
+export const isCustomerOrAgent = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const user = req.user;
+
+  if (user.accountType === userType.admin.toString()) {
     return notAuthorized(res);
   }
 

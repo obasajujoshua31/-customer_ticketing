@@ -4,9 +4,8 @@ import { Request, Response, NextFunction } from 'express';
 import { badRequest } from './http';
 import { logger } from './logger';
 
-
 /**
- * @description This validates request body and for error. 
+ * @description This validates request body and for error.
  * It returns badRequest if there are errors
  * and passes to the next handler if no errors.
  *
@@ -30,7 +29,7 @@ const validateResponse = () => (
   return next();
 };
 /**
- * @description This is responsible for checking string field that 
+ * @description This is responsible for checking string field that
  * it satisfies the length provided or 1 if not provided
  *
  * @param {string} field
@@ -42,9 +41,8 @@ const stringCheck = (field: string, length: number = 1): ValidationChain =>
     .isLength({ min: length })
     .withMessage(`${field} requires minimum of ${length} character(s)`);
 
-
 /**
- * @description This validates that register  user endpoint 
+ * @description This validates that register  user endpoint
  * request body is valid
  */
 export const validateRegisterUser = () => [
@@ -54,9 +52,8 @@ export const validateRegisterUser = () => [
   validateResponse(),
 ];
 
-
 /**
- * @description This validates that login in user endpoint 
+ * @description This validates that login in user endpoint
  * request body is valid
  */
 export const validateLoginUser = () => [
@@ -66,7 +63,7 @@ export const validateLoginUser = () => [
 ];
 
 /**
- * @description This validates that the create request endpoint 
+ * @description This validates that the create request endpoint
  * request body is valid
  */
 export const validateCreateRequest = () => [
@@ -81,4 +78,10 @@ export const validateCreateRequest = () => [
  * @param {string} id
  * @returns {boolean}
  */
-export const isValidId = (id: string): boolean => mongoose.Types.ObjectId.isValid(id);
+export const isValidId = (id: string): boolean =>
+  mongoose.Types.ObjectId.isValid(id);
+
+export const validateCreateComment = () => [
+  stringCheck('comment'),
+  validateResponse(),
+];

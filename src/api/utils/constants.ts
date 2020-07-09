@@ -9,6 +9,8 @@ export const STATUS_CHANGE = 'status_changed';
 export const REQUEST_ACTIVE = 'REQUEST_ACTIVE';
 export const REQUEST_CLOSED = 'REQUEST_CLOSED';
 export const REQUEST_CANCELLED = 'REQUEST_CANCELLED';
+export const AGENT_COMMENT = 'AGENT_COMMENT';
+export const CUSTOMER_COMMENT = 'CUSTOMER_COMMENT';
 
 export enum userType {
   customer = 'customer',

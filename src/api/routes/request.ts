@@ -7,6 +7,7 @@ import {
   assignRequestToAgentByAdmin,
   closeRequest,
   cancelRequest,
+  getRequestClosedInLastMonth,
 } from '../controllers/request';
 import { validateCreateRequest } from '../utils/validator';
 import { Router } from 'express';
@@ -28,6 +29,8 @@ requestRouter
 
 requestRouter.route('/all').get(isAgentOrAdmin, GetAllRequests());
 
+requestRouter.get('/closed-last-month', isAgent, getRequestClosedInLastMonth());
+
 requestRouter
   .route('/:requestId')
   .get(getRequest, GetRequestById())
@@ -40,12 +43,9 @@ requestRouter.put(
   assignRequestToAgentByAdmin(),
 );
 
-requestRouter.put(
-  '/:requestId/close',
-  isAgentOrAdmin,
-  getRequest,
-  closeRequest(),
-);
+requestRouter
+  .route('/:requestId/close')
+  .put(isAgentOrAdmin, getRequest, closeRequest());
 
 requestRouter.put(
   '/:requestId/cancel',
