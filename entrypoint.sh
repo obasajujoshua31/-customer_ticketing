@@ -1,7 +1,7 @@
-yarn seed:data 
 
-if [ $NODE_ENV = "development" ] 
-then yarn start
+if [ $NODE_ENV = "test" ] 
+then yarn test
 else 
-yarn test
+yarn seed:data
+yarn start
 fi
