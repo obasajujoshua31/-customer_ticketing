@@ -9,6 +9,7 @@ import { isAgentRequests, isCustomerRequests } from '../middlewares/request';
 
 const commentRouter = Router();
 
+// comments routes
 commentRouter
   .route('/')
   .post(

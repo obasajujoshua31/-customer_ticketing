@@ -11,6 +11,7 @@ const {
   JWT_SECRET_KEY,
   SENDGRID_KEY,
   FROM_EMAIL,
+  REDIS,
 } = process.env;
 
 const appConfig: IConfig = {
@@ -21,6 +22,7 @@ const appConfig: IConfig = {
   jwtSecretKey: JWT_SECRET_KEY,
   sendGridKey: SENDGRID_KEY,
   fromEmail: FROM_EMAIL,
+  redisURL: REDIS,
 };
 
 export default appConfig;

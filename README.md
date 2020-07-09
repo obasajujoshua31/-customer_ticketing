@@ -1,6 +1,10 @@
 # customer_ticketing
 
 
+[![obasajujoshua31](https://circleci.com/gh/obasajujoshua31/customer_ticketing.svg?style=svg)](https://app.circleci.com/pipelines/github/obasajujoshua31/customer_ticketing)
+
+
+
 [Database Design](https://dbdesigner.page.link/v1j6cyS1D3syh87z5)
 
 
@@ -21,3 +25,20 @@ Steps to setup the project
 - [Mongo Database](mongodb.com)
 - [Express Api application](expressjs.com)
 - [Mongo Express application](https://github.com/mongo-express/mongo-express)
+
+
+5. Assumptions
+
+- All customers can create requests.
+- Customers whose accounts have been deactivated cannot login nor create requests.
+- All support agents can view all requests
+- Customers can only view their own requests
+- Admin can view all requests
+- Support agents can assign themselves to request that is pending
+- Support agents can only close requests that is their own.
+- Support agents can not cancel requests.
+- Admin can cancel only pending requests.
+- Customer can cancel only their requests and only pending.
+
+
+6. Feedback - a Relational Database could have been better for a data that is related like this. 

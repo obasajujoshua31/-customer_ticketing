@@ -10,13 +10,15 @@ import { Router } from 'express';
 
 const userRouter = Router();
 
+// users routes only for admin
+
 userRouter.get('/', isAdmin, getAllUsers());
 userRouter.get('/:userId', isAdmin, getUser, getUserById());
 userRouter.put(
   '/:userId/deactivate',
   isAdmin,
   getUser,
-  deactivateCustomerOrAgent(),
+  deactivateCustomerOrAgent()
 );
 
 export default userRouter;

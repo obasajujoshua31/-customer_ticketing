@@ -10,6 +10,7 @@ services:
       DATABASE_NAME: $DATABASE_NAME
       APP_PORT: $APP_PORT
       NODE_ENV: $NODE_ENV
+      REDIS: redis://redis:6379
     ports:
       - $APP_PORT:$APP_PORT
     depends_on:

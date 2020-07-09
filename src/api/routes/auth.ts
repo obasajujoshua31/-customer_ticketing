@@ -4,6 +4,7 @@ import { Router } from 'express';
 
 const authRouter = Router();
 
+// auth routes
 authRouter.post('/register', validateRegisterUser(), RegisterUser());
 authRouter.post('/login', validateLoginUser(), LoginUser());
 

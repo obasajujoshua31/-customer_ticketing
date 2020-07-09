@@ -8,6 +8,7 @@ import commentRouter from './comment';
 
 const appRouter = Router();
 
+// main app router
 appRouter.use('/auth', authRouter);
 appRouter.use('/requests', verifyUser, requestRouter);
 appRouter.use('/users', verifyUser, userRouter);

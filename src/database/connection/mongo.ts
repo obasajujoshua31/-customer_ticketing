@@ -6,6 +6,12 @@ interface IMongoConnection {
   client: MongoClient;
 }
 
+/**
+ * @description This is responsible for connecting to mongo server with the mongo driver
+ *
+ * @param {IConfig} config
+ * @returns {Promise<IMongoConnection>}
+ */
 const connectToMongoClient = (config: IConfig): Promise<IMongoConnection> => {
   return new Promise((resolve, reject) => {
     connectToMongo(

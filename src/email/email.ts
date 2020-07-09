@@ -6,6 +6,14 @@ dotenv.config();
 
 sgMail.setApiKey(config.sendGridKey);
 
+/**
+ * @description responsible for sending out emails
+ *
+ * @param {string} email
+ * @param {string} subject
+ * @param {string} html
+ * @returns {Promise<any>}
+ */
 const sendEmail = async (email: string, subject: string, html: string) => {
   const emailBody = {
     to: email,

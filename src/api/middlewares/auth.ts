@@ -7,7 +7,7 @@ import User, { IUser } from '../../database/models/user';
 export const verifyUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const bearerToken = req.headers[`authorization`] as string;
 
@@ -73,7 +73,7 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 export const isAgentOrAdmin = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const user = req.user;
 
@@ -87,7 +87,7 @@ export const isAgentOrAdmin = (
 export const isCustomerOrAdmin = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const user = req.user;
 
@@ -98,11 +98,10 @@ export const isCustomerOrAdmin = (
   return next();
 };
 
-
 export const isCustomerOrAgent = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const user = req.user;
 

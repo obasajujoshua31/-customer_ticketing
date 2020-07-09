@@ -5,8 +5,14 @@ import MailGen from 'mailgen';
 import { IUser } from 'database/models/user';
 import { statusEnum } from 'api/utils/constants';
 
-const capitalize = (s: string) => {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+/**
+ * @description responsible for capitalizing the first alphabet
+ *
+ * @param {string} word
+ * @returns {string}
+ */
+const capitalize = (word: string): string => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 };
 
 const mailGenerator = new MailGen({
@@ -17,6 +23,15 @@ const mailGenerator = new MailGen({
   },
 });
 
+/**
+ * @description for generating email templates for change of status
+ *
+ * @param {string} name
+ * @param {string} url
+ * @param {statusEnum} status
+ * @param {IUser} [agent=null]
+ * @returns
+ */
 export const statusChangeTemplate = (
   name: string,
   url: string,
@@ -52,7 +67,14 @@ export const statusChangeTemplate = (
 
   return mailGenerator.generate(email);
 };
-
+/**
+ * @description for generating email templates for new agent comment
+ * 
+ * @param {IComment} comment
+ * @param {IRequest} request
+ * @param {IUser} user
+ * @param {string} url
+ */
 export const newAgentCommentTemplate = (
   comment: IComment,
   request: IRequest,

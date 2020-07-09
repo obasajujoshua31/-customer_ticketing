@@ -81,7 +81,13 @@ export const validateCreateRequest = () => [
 export const isValidId = (id: string): boolean =>
   mongoose.Types.ObjectId.isValid(id);
 
-export const validateCreateComment = () => [
+
+  /**
+   * @description This validates that the create comment endpoint 
+   * request is valid
+   *
+   */
+ export const validateCreateComment = () => [
   stringCheck('comment'),
   validateResponse(),
 ];

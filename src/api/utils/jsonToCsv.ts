@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 import { parseAsync } from 'json2csv';
 
+// CSV Template fields
 const fields = [
   {
     label: 'ID',
@@ -30,6 +31,12 @@ const fields = [
   },
 ];
 
+/**
+ * @description responsible for converting list of mongo db documents to csv datafile
+ *
+ * @param {Document[]} data
+ * @returns {Promise<any>}
+ */
 export const convertToCSV = (data: Document[]) => {
   return new Promise((resolve, reject) => {
     return parseAsync(data, { fields })

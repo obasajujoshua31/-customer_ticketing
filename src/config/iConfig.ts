@@ -6,4 +6,5 @@ export default interface IConfig {
   jwtSecretKey: string;
   sendGridKey: string;
   fromEmail: string;
+  redisURL: string;
 }
