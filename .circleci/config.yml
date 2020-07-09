@@ -11,7 +11,8 @@ jobs:
           keys:
              - v1-pkg-cache
 
-      - run: docker build  . -t $CIRCLE_SHA_SHORT 
+      - run: echo $CIRCLE_SHA_SHORT
+      - run: docker build -t $CIRCLE_SHA_SHORT .
       - run: docker run $CIRCLE_SHA_SHORT
 workflows:
   build-and-test:
