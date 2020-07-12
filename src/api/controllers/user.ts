@@ -1,18 +1,9 @@
 import { userType } from './../utils/constants';
-import { findRequestById } from './../utils/query';
-import User, { IUser } from '../../database/models/user';
+import User from '../../database/models/user';
 import Request from '../../database/models/request';
-
 import { tryAsync } from '../utils/global';
-import {
-  badRequest,
-  successResponse,
-  notFound,
-  notAuthorized,
-} from '../utils/http';
-import { logger } from '../utils/logger';
+import { successResponse, notAuthorized, noContent } from '../utils/http';
 import { paginationOption, requestPaginationQuery } from '../utils/pagination';
-import { isValidId } from '../utils/validator';
 
 export const getAllUsers = () =>
   tryAsync(async (req, res) => {
@@ -39,6 +30,7 @@ export const getUserById = () =>
   tryAsync(async (req, res) => {
     const { userId } = req.params;
 
+    req.foundUser.password = undefined;
     const userRequests = await Request.find({ customer: userId });
 
     return successResponse(res, { user: req.foundUser, request: userRequests });
@@ -52,9 +44,7 @@ export const deactivateCustomerOrAgent = () =>
       return notAuthorized(res);
     }
 
-    const deactivatedUser = await user.deactivate();
+    await user.deactivate();
 
-    deactivatedUser.password = undefined;
-
-    return successResponse(res, deactivatedUser);
+    return noContent(res);
   });

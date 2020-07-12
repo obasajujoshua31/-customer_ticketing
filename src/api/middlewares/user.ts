@@ -1,11 +1,9 @@
-import { findRequestById, findUserById } from './../utils/query';
+import { findUserById } from './../utils/query';
 import { badRequest, notFound } from './../utils/http';
 import { logger } from '../utils/logger';
 import { isValidId } from './../utils/validator';
-import RequestModel, { IRequest } from '../../database/models/request';
 import { Response, Request, NextFunction } from 'express';
-import User, { IUser } from '../../database/models/user';
-import user from '../../database/models/user';
+import { IUser } from '../../database/models/user';
 
 /**
  * @description This is responsible for getting request from params by req.params.requestId
@@ -19,7 +17,7 @@ import user from '../../database/models/user';
 export const getUser = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<any> => {
   const { userId } = req.params;
 

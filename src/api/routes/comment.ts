@@ -1,29 +1,16 @@
 import { validateCreateComment } from './../utils/validator';
 import {
   createCommentByAgentOrCustomer,
-  getAllCommentsByAgentOnARequest,
+  getAllCommentsOnARequest,
 } from './../controllers/comment';
 import { Router } from 'express';
-import { isCustomerOrAgent } from '../middlewares/auth';
-import { isAgentRequests, isCustomerRequests } from '../middlewares/request';
 
 const commentRouter = Router();
 
 // comments routes
 commentRouter
   .route('/')
-  .post(
-    isCustomerOrAgent,
-    isAgentRequests,
-    isCustomerRequests,
-    validateCreateComment(),
-    createCommentByAgentOrCustomer(),
-  )
-  .get(
-    isCustomerOrAgent,
-    isAgentRequests,
-    isCustomerRequests,
-    getAllCommentsByAgentOnARequest(),
-  );
+  .post(validateCreateComment(), createCommentByAgentOrCustomer())
+  .get(getAllCommentsOnARequest());
 
 export default commentRouter;

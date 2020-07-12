@@ -5,20 +5,14 @@ import {
   getUserById,
   deactivateCustomerOrAgent,
 } from '../controllers/user';
-import {} from '../utils/validator';
 import { Router } from 'express';
 
 const userRouter = Router();
 
 // users routes only for admin
 
-userRouter.get('/', isAdmin, getAllUsers());
-userRouter.get('/:userId', isAdmin, getUser, getUserById());
-userRouter.put(
-  '/:userId/deactivate',
-  isAdmin,
-  getUser,
-  deactivateCustomerOrAgent()
-);
+userRouter.get('/', getAllUsers());
+userRouter.get('/:userId', getUser, getUserById());
+userRouter.put('/:userId/deactivate', getUser, deactivateCustomerOrAgent());
 
 export default userRouter;

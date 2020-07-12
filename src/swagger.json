@@ -1,0 +1,680 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Customer Ticketing API",
+    "version" : "1.0.0",
+    "title" : "Customer Ticketing API",
+    "contact" : {
+      "email" : "obasajujoshua31@gmail.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "localhost:5000",
+  "basePath" : "/api/v1",
+  "tags" : [ {
+    "name" : "Admin",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "Auth",
+    "description" : "Operations around authentication"
+  }, {
+    "name" : "Requests",
+    "description" : "Operations around all customer requests"
+  }, {
+    "name" : "Comments",
+    "description" : "Operations around comments"
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/users" : {
+      "get" : {
+        "tags" : [ "Admin" ],
+        "summary" : "Get all users in the application",
+        "description" : "Get all users in customer ticketing - application/json",
+        "operationId" : "getUsers",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "all users"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "not allowed requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "get" : {
+        "tags" : [ "Admin" ],
+        "summary" : "Get user by id in the application",
+        "description" : "Get User by Id - application/json",
+        "operationId" : "getUserById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "user ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "user found"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "not allowed requests"
+          },
+          "404" : {
+            "description" : "user not found"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/users/{userId}/deactivate" : {
+      "put" : {
+        "tags" : [ "Admin" ],
+        "summary" : "Deactivate agent or customer",
+        "description" : "deactive customer or agent - application/json",
+        "operationId" : "deactivateCustomerOrAgent",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "user ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "user found"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "not allowed requests"
+          },
+          "404" : {
+            "description" : "user not found"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Login into customer ticketing",
+        "description" : "Login into customer ticketing - application/json",
+        "operationId" : "loginUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "loginPayload",
+          "description" : "Login User",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/loginPayload"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "user logged in"
+          },
+          "400" : {
+            "description" : "invalid credential"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/auth/register" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "summary" : "Create account with customer ticketing",
+        "description" : "Create Account with customer ticketing - application/json",
+        "operationId" : "registerUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "registerPayload",
+          "description" : "Register Customer",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/registerPayload"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "customer account created"
+          },
+          "400" : {
+            "description" : "invalid credential"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests" : {
+      "get" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Get requests (CUSTOMER ONLY)",
+        "description" : "Get requests for a logged in customer - application/json",
+        "operationId" : "getLogginUserRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Bearer token",
+          "in" : "header",
+          "description" : "Authorization token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "requests retrieved"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Create a new requests(CUSTOMER ONLY)",
+        "description" : "Create request by a registered customer (CUSTOMER ONLY) - application/json",
+        "operationId" : "createRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Bearer token",
+          "in" : "header",
+          "description" : "Authorization token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "requestPayload",
+          "description" : "Register Customer",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/requestPayload"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "request created"
+          },
+          "400" : {
+            "description" : "invalid request data"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/all" : {
+      "get" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Get all requests (AGENTS AND ADMINS ONLY)",
+        "description" : "Get all requests in the application (AGENTS AND ADMINS ONLY) - application/json",
+        "operationId" : "getAllRequests",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "requests retrieved"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/closed-last-month" : {
+      "get" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Get requests closed last month (AGENTS ONLY)",
+        "description" : "Get all requests closed last month (AGENTS ONLY) - application/json",
+        "operationId" : "getRequetsClosedLastMonth",
+        "produces" : [ "text/csv" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "requests retrieved"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/{requestId}/admin" : {
+      "put" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Assign request to agents by admin (ADMINS ONLY)",
+        "description" : "Get all requests closed last month (AGENTS ONLY) - application/json",
+        "operationId" : "assignRequestToAgentByAdmin",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "Request ID",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "updateRequestPayloadByAdmin",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/updateRequestPayloadByAdmin"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "request retrieved"
+          },
+          "400" : {
+            "description" : "invalid request id or cannot assign non pending customer requests."
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/{requestId}/close" : {
+      "put" : {
+        "tags" : [ "Requests" ],
+        "summary" : "close request by agent or admin (AGENTS AND ADMINS ONLY)",
+        "description" : "close request by agents and admins only (AGENTS AND ADMINS ONLY) - application/json",
+        "operationId" : "closeRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "Request ID",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "comment",
+          "description" : "reason for closing the customer request",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/newCommentPayload"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "request closed"
+          },
+          "400" : {
+            "description" : "invalid request id or cannot close non active customer requests."
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/{requestId}/cancel" : {
+      "put" : {
+        "tags" : [ "Requests" ],
+        "summary" : "cancel request by customer or admin (CUSTOMERS AND ADMINS ONLY)",
+        "description" : "cancel request by customers and admins only (CUSTOMERS AND ADMINS ONLY) - application/json",
+        "operationId" : "cancelRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "Request ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "request cancelled"
+          },
+          "400" : {
+            "description" : "invalid request id or cannot cancel non active customer requests."
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/{requestId}" : {
+      "get" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Get requests by ID",
+        "description" : "Get requests by id - application/json",
+        "operationId" : "getRequestById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "request ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "request retrieved"
+          },
+          "400" : {
+            "description" : "request id is not valid"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Requests" ],
+        "summary" : "Assign request to agent (AGENT ONLY)",
+        "description" : "assign request to agent (AGENT ONLY) - application/json",
+        "operationId" : "assignRequestToAgent",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "request ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "request retrieved"
+          },
+          "400" : {
+            "description" : "request id is not valid or can only assign pending customer requests"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    },
+    "/requests/{requestId}/comments" : {
+      "get" : {
+        "tags" : [ "Comments" ],
+        "summary" : "Get all comments on a request (AGENTS AND CUSTOMERS ONLY)",
+        "description" : "Get all comments on a request (AGENTS AND CUSTOMERS ONLY) - application/json",
+        "operationId" : "getAllCommentOnARequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "request ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "comments retrieved"
+          },
+          "400" : {
+            "description" : "request id is not valid"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Comments" ],
+        "summary" : "create new comment (AGENTS AND CUSTOMERS ONLY)",
+        "description" : "create new comment (AGENTS AND CUSTOMERS ONLY) - application/json",
+        "operationId" : "createNewComment",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "requestId",
+          "in" : "path",
+          "description" : "request ID",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "new comment",
+          "description" : "new comment payload",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/newCommentPayload"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "request retrieved"
+          },
+          "400" : {
+            "description" : "request id is not valid or can only assign pending customer requests"
+          },
+          "401" : {
+            "description" : "invalid authentication"
+          },
+          "403" : {
+            "description" : "unauthorized requests"
+          },
+          "500" : {
+            "description" : "An internal error occured"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "loginPayload" : {
+      "type" : "object",
+      "required" : [ "email", "password" ],
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "example" : "test@test.com"
+        },
+        "password" : {
+          "type" : "string",
+          "example" : "test"
+        }
+      }
+    },
+    "registerPayload" : {
+      "type" : "object",
+      "required" : [ "email", "name", "password" ],
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "test test"
+        },
+        "email" : {
+          "type" : "string",
+          "example" : "test@test.com"
+        },
+        "password" : {
+          "type" : "string",
+          "example" : "test"
+        }
+      }
+    },
+    "requestPayload" : {
+      "type" : "object",
+      "required" : [ "description" ],
+      "properties" : {
+        "description" : {
+          "type" : "string",
+          "example" : "This is a sample customer request description"
+        }
+      }
+    },
+    "updateRequestPayloadByAdmin" : {
+      "type" : "object",
+      "properties" : {
+        "agentId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "newCommentPayload" : {
+      "type" : "object",
+      "properties" : {
+        "comment" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

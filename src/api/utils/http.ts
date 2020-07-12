@@ -7,6 +7,7 @@ import {
   NOT_AUTHENTICATED,
   FORBIDDEN,
   NOTFOUND,
+  NOCONTENT,
 } from './constants';
 
 /**
@@ -70,3 +71,5 @@ export const notAuthorized = (res: Response) => res.sendStatus(FORBIDDEN);
  */
 export const notFound = (res: Response, message: string) =>
   res.status(NOTFOUND).json({ message });
+
+export const noContent = (res: Response) => res.sendStatus(NOCONTENT);

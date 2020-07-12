@@ -38,9 +38,9 @@ export const createCommentByAgentOrCustomer = () =>
     if (request.status !== statusEnum.ACTIVE) {
       logger.log({
         level: 'warn',
-        message: 'cannot only comment on active request',
+        message: 'can only comment on active request',
       });
-      return badRequest(res, 'cannot only comment on active request');
+      return badRequest(res, 'can only comment on active request');
     }
 
     if (agentOrCustomer.accountType === userType.customer) {
@@ -67,7 +67,7 @@ export const createCommentByAgentOrCustomer = () =>
     return createdResponse(res, newComment);
   });
 
-export const getAllCommentsByAgentOnARequest = () =>
+export const getAllCommentsOnARequest = () =>
   tryAsync(async (req, res) => {
     const { request } = req;
 

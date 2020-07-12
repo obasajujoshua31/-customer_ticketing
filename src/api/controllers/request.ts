@@ -143,6 +143,15 @@ export const assignRequestToAgentByAdmin = () =>
       return badRequest(res, 'agent account is deactivated');
     }
 
+
+    if (agent.accountType !== userType.agent) {
+      logger.log({
+        level: 'warn',
+        message: 'agent id passed is not an agent',
+      });
+      return badRequest(res, 'agent id passed is not an agent');
+    }
+
     if (request.customer.isDeactivated) {
       logger.log({
         level: 'warn',
