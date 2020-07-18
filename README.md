@@ -21,9 +21,9 @@ Steps to setup the project
 
 4. Run `docker-compose up` - to start the services. This include 
 
-- [Redis](redis.io)
-- [Mongo Database](mongodb.com)
-- [Express Api application](expressjs.com)
+- [Redis](https://redis.io)
+- [Mongo Database](https://mongodb.com)
+- [Express Api application](https://expressjs.com)
 - [Mongo Express application](https://github.com/mongo-express/mongo-express)
 
 5. Start application at port 6000 and navigate to http://localhost:6000/api-docs for the API documentation
