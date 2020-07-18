@@ -26,7 +26,7 @@ Steps to setup the project
 - [Express Api application](expressjs.com)
 - [Mongo Express application](https://github.com/mongo-express/mongo-express)
 
-5. Start application at port 6000 and navigate to http://localhost:5000/api-docs for the API documentation
+5. Start application at port 6000 and navigate to http://localhost:6000/api-docs for the API documentation
 
 `Note: If you are starting your application in a different port, go to swagger.json and change the host to the port you are using`
 
